@@ -17,6 +17,7 @@ class Config:
     POSTS_PER_PAGE = 20
     FOLLOWERS_PER_PAGE = 50
     COMMENTS_PER_PAGE = 30
+    SECURITY_PASSWORD_SALT = 'super_secure_text'
 
     @staticmethod
     def init_app(app):
