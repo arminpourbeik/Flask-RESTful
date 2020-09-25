@@ -7,7 +7,6 @@ from api.utils.responses import response_with
 from api.utils import responses as resp
 from api.models.user import User
 from api.schemas.user import UserSchema
-from api.utils.database import db
 
 user_routes = Blueprint("user_routes", __name__)
 
@@ -20,9 +19,9 @@ def create_user():
         user_schema = UserSchema()
         user = user_schema.load(data)
         result = user_schema.dump(user.create())
-        return response_with(resp.SUCCESS_201)
+        return response_with(resp.SUCCESS_201, value={'user': result})
     except IntegrityError:
-        return response_with(resp.INVALID_INPUT_422, message='User already registered')
+        return response_with(resp.INVALID_INPUT_422, message='User already registered.')
     except Exception as e:
         print(e)
         return response_with(resp.INVALID_INPUT_422)
