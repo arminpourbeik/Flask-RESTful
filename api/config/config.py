@@ -18,6 +18,7 @@ class Config:
     FOLLOWERS_PER_PAGE = 50
     COMMENTS_PER_PAGE = 30
     SECURITY_PASSWORD_SALT = 'super_secure_text'
+    UPLOAD_FOLDER = 'images'
 
     @staticmethod
     def init_app(app):

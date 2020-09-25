@@ -8,6 +8,7 @@ class Author(db.Model):
     first_name = db.Column(db.String(20))
     last_name = db.Column(db.String(20))
     created = db.Column(db.DateTime, server_default=db.func.now())
+    avatar = db.Column(db.String(20), nullable=True)
 
     # Relationships
     books = db.relationship("Book", backref="author", cascade="all, delete-orphan")

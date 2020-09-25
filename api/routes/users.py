@@ -27,7 +27,7 @@ def create_user():
         user = user_schema.load(data)
         token = generate_verification_token(data["email"])
         verification_email = url_for(
-            "user_routes.verify_token", token=token, _external=True
+            "user_routes.verify_email", token=token, _external=True
         )
         html = render_template_string(
             "<p>Welcome! Thanks for signing up. Please follow this link to activate your account:</p> <p><a href='{{ verification_email }}'>{{ verification_email }}</a></p> <br> <p>Thanks!</p>",
@@ -48,21 +48,17 @@ def create_user():
 def authenticate_user():
     try:
         data = request.get_json()
-        if data.get("email"):
-            current_user = User.find_by_email(data["email"])
-        elif data.get["username"]:
-            current_user = User.find_by_username(data["username"])
+        if data.get('email'):
+            current_user = User.find_by_email(data['email'])
+        elif data.get('username'):
+            current_user = User.find_by_username(data['username'])
         if not current_user:
             return response_with(resp.SERVER_ERROR_404)
-        if User.verify_hash(data["password"], current_user.password):
-            access_token = create_access_token(identity=data["username"])
-            return response_with(
-                resp.SUCCESS_201,
-                value={
-                    "message": "Logged in as {}".format(current_user.username),
-                    "access_token": access_token,
-                },
-            )
+        if current_user and not current_user.is_verified:
+            return response_with(resp.BAD_REQUEST_400)
+        if User.verify_hash(data['password'], current_user.password):
+            access_token = create_access_token(identity = current_user.username)
+            return response_with(resp.SUCCESS_200, value={'message': 'Logged in as admin', "access_token": access_token})
         else:
             return response_with(resp.UNAUTHORIZED_401)
     except Exception as e:
