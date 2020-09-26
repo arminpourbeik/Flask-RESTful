@@ -53,5 +53,6 @@ class TestUsers(BaseTestCase):
         data = json.loads(response.data)
         self.assertEqual(400, response.status_code)
 
+
 if __name__ == "__main__":
     unittest.main()

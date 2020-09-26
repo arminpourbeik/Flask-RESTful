@@ -5,8 +5,6 @@ from api.utils.database import db
 from api.utils.email import mail
 from api.config.config import config
 
-
-
 jwt = JWTManager()
 
 

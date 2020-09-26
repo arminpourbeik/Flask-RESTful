@@ -16,6 +16,12 @@ from flask_swagger_ui import get_swaggerui_blueprint
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 
+
+@app.route('/avatar/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+
+
 SWAGGER_URL = '/api/docs'
 
 
@@ -35,11 +41,6 @@ def add_admin():
     db.session.add(admin)
     db.session.commit()
     print('Admin user added.')
-
-
-@app.route('/avatar/<filename>')
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER', filename])
 
 
 # START GLOBAL HTTP CONFIGURATIONS
