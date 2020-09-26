@@ -26,16 +26,32 @@ class TestUsers(BaseTestCase):
         create_users()
 
     def test_login_user(self):
+        user = {"email": "kunal.relan12@gmail.com", "password": "helloworld"}
+        response = self.app.post(
+            "/api/users/login", data=json.dumps(user), content_type="application/json"
+        )
+        data = json.loads(response.data)
+        self.assertEqual(200, response.status_code)
+        self.assertTrue("access_token" in data)
+
+    def test_login_user_wrong_credentials(self):
+        user = {"email": "kunal.relan12@gmail.com", "password": "helloworld12"}
+        response = self.app.post(
+            '/api/users/login', data=json.dumps(user), content_type='application/json'
+        )
+        data = json.loads(response.data)
+        self.assertEqual(401, response.status_code)
+
+    def test_login_unverified_user(self):
         user = {
-            'email': 'kunal.relan12@gmail.com',
+            'email': 'kunal.relan123@gmail.com',
             'password': 'helloworld'
         }
-        response = self.app.post('/api/users/login', data=json.dumps(user), content_type='application/json')
-        data =json.loads(response.data)
-        self.assertEqual(200, response.status_code)
-        self.assertTrue('access_token' in data)
+        response = self.app.post(
+            '/api/users/login', data=json.dumps(user), content_type='application/json'
+        )
+        data = json.loads(response.data)
+        self.assertEqual(400, response.status_code)
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
-
