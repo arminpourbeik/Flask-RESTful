@@ -11,7 +11,7 @@ class Config:
     MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
     MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
     MAIL_SUBJECT_PREFIX = "[Flasky]"
-    MAIL_SENDER = "Flasky Admin <flasky@example.com>"
+    MAIL_DEFAULT_SENDER = "Flasky Admin <flasky@example.com>"
     ADMIN = os.environ.get("FLASKY_ADMIN")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     POSTS_PER_PAGE = 20
@@ -34,8 +34,17 @@ class DevelopmentConfig(Config):
 
 class TestingConfig(Config):
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URL") or "sqlite://"
+    # SQLALCHEMY_DATABASE_URI = os.environ.get("TEST_DATABASE_URL") or "sqlite://"
     WTF_CSRF_ENABLED = False
+    SQLALCHEMY_ECHO = False
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_TLS = False
+    MAIL_USE_SSL = False
+    MAIL_USERNAME = ""
+    MAIL_PASSWORD = ""
+    MAIL_SUBJECT_PREFIX = ""
+    MAIL_SENDER = ""
 
 
 class ProductionConfig(Config):

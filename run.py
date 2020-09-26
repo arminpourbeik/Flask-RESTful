@@ -1,7 +1,7 @@
 import logging
 import os
 
-from flask import send_from_directory
+from flask import send_from_directory, jsonify
 
 from api.models.author import Author
 from api.models.book import Book
@@ -11,7 +11,12 @@ from api.utils.responses import response_with
 import api.utils.responses as resp
 from main import create_app
 
+from flask_swagger import swagger
+from flask_swagger_ui import get_swaggerui_blueprint
+
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
+
+SWAGGER_URL = '/api/docs'
 
 
 @app.shell_context_processor
@@ -60,4 +65,18 @@ def not_found(e):
     logging.error(e)
     return response_with(resp.SERVER_ERROR_404)
 
+
 # END GLOBAL HTTP CONFIGURATIONS
+
+
+@app.route('/api/spec')
+def spec():
+    swag = swagger(app, prefix='/api')
+    swag['info']['base'] = 'http://localhost:5000'
+    swag['info']['version'] = '1.0'
+    swag['info']['title'] = 'Flask Author DB'
+    return jsonify(swag)
+
+
+swaggerui_blueprint = get_swaggerui_blueprint('/api/docs', '/api/spec', config={"app_name": "flask Author DB"})
+app.register_blueprint(swaggerui_blueprint, url_prefix=SWAGGER_URL)
